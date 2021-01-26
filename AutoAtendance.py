@@ -7,7 +7,7 @@ from datetime import datetime,timedelta
 from csv import reader
 from lxml import html
 from bs4 import BeautifulSoup
-from os import path
+from os import path,remove
 
 # Check if credentials exists if not create them else load them
 
@@ -65,9 +65,16 @@ def main():
         }
 
         # Perform login
-        session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
-        print("Logged in...")
+        result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
 
+        if result.url == LOGIN_URL:
+            print("Invalid Credentials")
+            remove("./credentials") 
+            exit(0)
+        else:
+            print("Logged in...")
+
+        
         
         # Mark Atendance
 
