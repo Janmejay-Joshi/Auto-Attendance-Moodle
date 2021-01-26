@@ -21,8 +21,8 @@ class Attendance():
 
     def Find_Link(self):
         result = self.session.get(self.lecture_link, headers = dict(referer = self.lecture_link))
-        soup = BeautifulSoup(result.content, 'html5lib')
-        Table = soup.find_all('table', attrs = {"class":"generaltable attwidth boxaligncenter"})[0]
+        soup = BeautifulSoup(result.content, 'lxml')
+        Table = soup.find('table', attrs = {"class":"generaltable attwidth boxaligncenter"})
         Columns = Table.find_all('tr')
         Submit = None
 
