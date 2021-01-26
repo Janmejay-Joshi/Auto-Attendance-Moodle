@@ -42,7 +42,6 @@ def main():
                         Lecture = Schedule[2]
                 else:
                     print("\nNo Class Right now [<.>_<.>]\n")
-                    Lecture = "AI"
                     exit(0)
 
 
