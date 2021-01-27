@@ -63,7 +63,7 @@ class Attendance():
             return 
 
         attendance_type = self.Attendance_Type
-        atender = Attender(attendance_link, self.lecture_link, self.session)
+        atender = Attender(attendance_link, self.lecture_link, self.session,self.persist)
 
         if attendance_type == 1:
             print("Type1: Direct Link")
@@ -81,42 +81,63 @@ class Attendance():
 
 class Attender():
 
-    def __init__(self, Attendance_Link, Lecture_Link, session):
+    def __init__(self, Attendance_Link, Lecture_Link, session,persist):
 
         self.attendance_link = Attendance_Link
         self.lecture_link = Lecture_Link
         self.session = session
-    
+        self.persist = persist 
+
     def direct_link(self):
 
         attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
 
-        print(attendance_page) 
-        if str(attendance_page) == "<Response [200]>":
+        if result.url != attendance_page.url:
             print("Attendance Marked... [^_^]")
-            if not persist:
+            if not self.persist:
                 exit(0)
             else:
                 return
         else:
             print("Unsuccessful")
 
-# currentlly not working present_button(self)
 
     def present_button(self):
 
         attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
-        print (self.attendance_link)
-        print(attendance_page) 
+        sesskey = attendance_page.url.split("&")[1].split("=")[1] 
+        sessid = attendance_page.url.split("?")[1].split("&")[0].split("=")[1] 
+        status = 77
         
-        payload = {
-                    "status":"625",
-                    "submitbutton":"Save changes"
-                }
+        soup = BeautifulSoup(attendance_page.content,'lxml')
+        lables = soup.find("div",attrs={"class":"d-flex flex-wrap align-items-center"})
+        status = lables.find_all("input")[0]['value']
+
+        
+
+
+        payload ={
+                "sessid":sessid,
+                "sesskey":sesskey,
+                "sesskey":sesskey,
+                "_qf__mod_attendance_form_studentattendance":1,
+                "mform_isexpanded_id_session":1,
+                "status":status,
+                "submitbutton":"Save+changes" 
+        }        
+
 
         result = self.session.post(self.attendance_link, data=payload, headers = dict(referer = self.attendance_link),allow_redirects=True)
 
-        print(result.content)
+        print(result.url)
                 
+        if result.url != attendance_page.url:
+            print("Attendance Marked... [^_^]")
+            if not self.persist:
+                exit(0)
+            else:
+                return
+        else:
+            print("Unsuccessful")
         
 
