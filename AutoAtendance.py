@@ -47,7 +47,7 @@ Usage:
     
             elif currentArgument in ("--remove-credentials"):
                 print("Removing credentials...")
-                sys.remove("./credentials")
+                remove("./credentials")
                 exit(0)
     except getopt.error as err:
         # output error, and return with an error code
@@ -56,6 +56,7 @@ Usage:
 # Check if credentials exists if not create them else load them
 
     if not path.exists("./credentials"):
+        print("Credentials:\n")
         with open("./credentials",'w') as cred_file:
             USERNAME = input("Enter Moodle Username: ")
             PASSWORD = input("Enter Moodle Password: ")
