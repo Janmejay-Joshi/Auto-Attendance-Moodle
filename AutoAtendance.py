@@ -138,7 +138,7 @@ if __name__ == '__main__':
     cred = PreProcess()
     now = datetime.now()
     start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-    end_time = datetime.strptime("14:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
+    end_time = datetime.strptime("17:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
     
     while start_time < datetime.now() < end_time:
         main(cred)
