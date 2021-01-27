@@ -19,5 +19,4 @@ Run the script in a python environment.
 ```
 ## Known Issues
 
-* Can't mark attendance for Subjects with sellection of radio type button
 * Subject and Atendance links hard coded
