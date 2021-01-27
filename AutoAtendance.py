@@ -69,7 +69,7 @@ Usage:
             USERNAME = cred[0] 
             PASSWORD = cred[1] 
 
-        LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php" 
+    LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php" 
 
     cred0 = [persist,LOGIN_URL,USERNAME,PASSWORD]
     return cred0
