@@ -11,12 +11,13 @@ from lxml import html
 
 class Attendance():
     
-    def __init__(self, Lecture, Session):
+    def __init__(self, Lecture, Session, persist):
 
         self.lecture_link, self.Attendance_Type = self.Attendance_Link_Type(Lecture)
         self.session = Session
         self.Lecture = Lecture
-        
+        self.persist = persist
+
         self.Assign_Attender()
 
     def Find_Link(self):
@@ -35,7 +36,10 @@ class Attendance():
             Attendance_Mark_link = Submit['href'];
         else:
             print("No Attendance Link Found...")
-            exit(0)
+            if not self.persist:
+                exit(0)
+            else:
+                return None
 
         return Attendance_Mark_link
 
@@ -55,6 +59,9 @@ class Attendance():
     def Assign_Attender(self):
 
         attendance_link = self.Find_Link()
+        if attendance_link == None:
+            return 
+
         attendance_type = self.Attendance_Type
         atender = Attender(attendance_link, self.lecture_link, self.session)
 
@@ -87,7 +94,10 @@ class Attender():
         print(attendance_page) 
         if str(attendance_page) == "<Response [200]>":
             print("Attendance Marked... [^_^]")
-            exit(0)
+            if not persist:
+                exit(0)
+            else:
+                return
         else:
             print("Unsuccessful")
 

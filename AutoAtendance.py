@@ -71,10 +71,14 @@ Usage:
 
         LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php" 
 
-    return persist
+    cred0 = [persist,LOGIN_URL,USERNAME,PASSWORD]
+    return cred0
 
-def main(persist):
+def main(cred0):
+        
+        persist,LOGIN_URL,USERNAME,PASSWORD = cred0 
         print("    Auto-Atendance running...",end = '\r')
+        Lecture = None
         #Aporach Schedule
         with open('Schedule.csv', encoding = "utf-8") as csvfile:
             spamreader = reader(csvfile)
@@ -87,12 +91,11 @@ def main(persist):
                     if schedule_time < now and schedule_time+ timedelta(hours=1) > now:
                         Lecture = Schedule[2]
 
-                else:
-                    if not persist:
-                        print("\nNo Class Right now [<.>_<.>]\n")
-                        exit(0)
-                    else:
-                        return 
+            if not persist and Lecture == None:
+                print("\nNo Class Right now [<.>_<.>]\n")
+                exit(0)
+            elif persist and Lecture == None:
+                return 
 
 
         print(f"\nLecture now is : {Lecture}")
@@ -128,15 +131,15 @@ def main(persist):
         
         # Mark Atendance
 
-        AtendanceMethod.Attendance(Lecture, session_requests)
+        AtendanceMethod.Attendance(Lecture, session_requests, persist)
 
 if __name__ == '__main__':
 
-    persist = PreProcess()
+    cred = PreProcess()
     now = datetime.now()
     start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
     end_time = datetime.strptime("14:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
     
     while start_time < datetime.now() < end_time:
-        main(persist)
+        main(cred)
         sleep(300)        
