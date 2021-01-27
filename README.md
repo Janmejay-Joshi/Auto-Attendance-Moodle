@@ -9,7 +9,7 @@
 * [requests](https://requests.readthedocs.io/en/master/user/install/#install)
 
 ## Usage
-Run the script in a python environment.
+Run the AutoAtendance.py in a python environment.
 
 ### Script Arguments
 ```
