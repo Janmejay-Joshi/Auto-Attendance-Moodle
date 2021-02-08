@@ -142,4 +142,4 @@ if __name__ == '__main__':
     
     while datetime.now() < end_time:
         main(cred)
-        sleep(secs=300)        
+        sleep(300)        
