@@ -20,3 +20,4 @@ Run AutoAtendance.py in a python environment.
 ## Known Issues
 
 * Subject and Atendance links hard coded
+* Script breaks when server goes down
