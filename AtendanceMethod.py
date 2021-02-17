@@ -92,14 +92,11 @@ class Attender():
 
         attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
 
-        if result.url != attendance_page.url:
-            print("Attendance Marked... [^_^]")
-            if not self.persist:
-                exit(0)
-            else:
-                return
+        print("Attendance Marked... [^_^]")
+        if not self.persist:
+            exit(0)
         else:
-            print("Unsuccessful")
+            return
 
 
     def present_button(self):
