@@ -49,7 +49,7 @@ class Attendance():
             "LA": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=789",1), 
             "AI": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=823",2),
             "ICP":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=816",2),
-            "ICPL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=1454",2),
+            "ICPL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=294",2),
             "BEEE":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=1088",2),
             "BEEEL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=2077",2)
         } 
