@@ -45,8 +45,8 @@ class Attendance():
 
     def Attendance_Link_Type(self, Lecture): 
         switcher = { 
-            "EEES": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=1194",2), 
-            "LA": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=789",1), 
+            "OOP": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5809",2), 
+            "DS": ("http://op2020.mitsgwalior.in/course/view.php?id=283",2), 
             "AI": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=823",2),
             "ICP":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=816",2),
             "ICPL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=294",2),
