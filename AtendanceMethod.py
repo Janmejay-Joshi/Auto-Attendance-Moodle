@@ -46,12 +46,12 @@ class Attendance():
     def Attendance_Link_Type(self, Lecture): 
         switcher = { 
             "OOP": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5809",2), 
-            "DS": ("http://op2020.mitsgwalior.in/course/view.php?id=283",2), 
-            "AI": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=823",2),
-            "ICP":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=816",2),
-            "ICPL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=294",2),
-            "BEEE":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=1088",2),
-            "BEEEL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=2077",2)
+            "DS": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6004",2), 
+            "TL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6145",2),
+            "TLL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6146",2),
+            "STL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5962",2),
+            "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=1088",2),
+            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=2077",2)
         } 
 
         return switcher.get(Lecture, 0) 
