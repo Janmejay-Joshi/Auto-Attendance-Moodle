@@ -47,11 +47,12 @@ class Attendance():
         switcher = { 
             "OOP": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5809",2), 
             "DS": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6004",2), 
+            "DSL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6195",2), 
             "TL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6145",2),
             "TLL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6146",2),
             "STL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5962",2),
-            "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=1088",2),
-            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=2077",2)
+            "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6267",2),
+            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2)
         } 
 
         return switcher.get(Lecture, 0) 
