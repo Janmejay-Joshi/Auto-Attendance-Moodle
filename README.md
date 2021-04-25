@@ -19,5 +19,6 @@ Run AutoAtendance.py in a python environment.
 ```
 ## Known Issues
 
-* Subject and Atendance links hard coded
+* Subject and Attendance links hard coded
 * Script breaks when server goes down
+* Cant mark Attendance For Subjects with Password
