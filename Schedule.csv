@@ -1,8 +1,8 @@
 Mon,10:00,ST
 Mon,11:00,DLD
 Mon,12:00,OOP
-Mon,14:00,STL
-Mon,16:00,DS
+Mon,14:00,DS
+Mon,16:00,OOPL
 Tue,10:00,DS
 Tue,11:00,ST
 Tue,12:00,OOP
@@ -11,7 +11,7 @@ Tue,16:00,TL
 Wed,10:00,DLD
 Wed,11:00,ST
 Wed,12:00,OOP
-Wed,14:00,OOPL
+Wed,14:00,STL
 Wed,15:00,TL
 Thu,10:00,ST
 Thu,11:00,DS
@@ -21,5 +21,4 @@ Thu,16:00,DLD
 Fri,10:00,DLD
 Fri,11:00,TL
 Fri,12:00,DS
-Fri,14:00,ST
 Fri,15:00,OPP
