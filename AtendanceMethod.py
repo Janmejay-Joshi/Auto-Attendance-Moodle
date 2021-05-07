@@ -52,7 +52,8 @@ class Attendance():
             "TLL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6146",2),
             "STL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5962",2),
             "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6267",2),
-            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2)
+            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2),
+            "PHY":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2)
         } 
 
         return switcher.get(Lecture, 0) 
@@ -136,3 +137,37 @@ class Attender():
             print("Unsuccessful")
         
 
+    def password_button(self):
+
+        attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
+        sesskey = attendance_page.url.split("&")[1].split("=")[1] 
+        sessid = attendance_page.url.split("?")[1].split("&")[0].split("=")[1] 
+        
+        soup = BeautifulSoup(attendance_page.content,'lxml')
+        lables = soup.find("div",attrs={"class":"d-flex flex-wrap align-items-center"})
+        status = lables.find_all("input")[0]['value']
+
+        
+
+
+        payload ={
+                "sessid":sessid,
+                "sesskey":sesskey,
+                "sesskey":sesskey,
+                "_qf__mod_attendance_form_studentattendance":1,
+                "mform_isexpanded_id_session":1,
+                "status":status,
+                "submitbutton":"Save+changes" 
+        }        
+
+
+        result = self.session.post(self.attendance_link, data=payload, headers = dict(referer = self.attendance_link),allow_redirects=True)
+                
+        if result.url != attendance_page.url:
+            print("Attendance Marked... [^_^]")
+            if not self.persist:
+                exit(0)
+            else:
+                return
+        else:
+            print("Unsuccessful")
