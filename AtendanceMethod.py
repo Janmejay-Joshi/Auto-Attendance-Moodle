@@ -9,15 +9,16 @@ from lxml import html
     Attendance class defing and allocating prerequisits which are required before marking attendance
 """
 
+
 class Attendance():
     
     def __init__(self, Lecture, Session, persist):
 
-        self.lecture_link, self.Attendance_Type = self.Attendance_Link_Type(Lecture)
+        self.lecture_link, self.Attendance_Type, self.lecture_password = self.Attendance_Link_Type(Lecture)
         self.session = Session
         self.Lecture = Lecture
         self.persist = persist
-
+        
         self.Assign_Attender()
 
     def Find_Link(self):
@@ -45,15 +46,15 @@ class Attendance():
 
     def Attendance_Link_Type(self, Lecture): 
         switcher = { 
-            "OOP": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5809",2), 
-            "DS": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6004",2), 
-            "DSL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6195",2), 
-            "TL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6145",2),
-            "TLL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6146",2),
-            "STL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5962",2),
-            "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6267",2),
-            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2),
-            "PHY":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2)
+            "OOP": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5809",2,""), 
+            "DS": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6004",2,""), 
+            "DSL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6195",2,""), 
+            "TL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6145",2,""),
+            "TLL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6146",2,""),
+            "STL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5962",2,""),
+            "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6267",3,"AIR"),
+            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2,""),
+            "PHY":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2,"")
         } 
 
         return switcher.get(Lecture, 0) 
@@ -65,7 +66,7 @@ class Attendance():
             return 
 
         attendance_type = self.Attendance_Type
-        atender = Attender(attendance_link, self.lecture_link, self.session,self.persist)
+        atender = Attender(attendance_link, self.lecture_link, self.lecture_password, self.session,self.persist)
 
         if attendance_type == 1:
             print("Type1: Direct Link")
@@ -74,8 +75,14 @@ class Attendance():
         elif attendance_type == 2:
             print("Type2: Present Button")
             atender.present_button()
+
+        elif attendance_type == 3:
+            print("Type3: Password")
+            atender.password_button()
+
         else:
             exit(0)
+
 
 """
     Attender class marks the actual atendance on basis of which type of Lecture it is
@@ -83,10 +90,11 @@ class Attendance():
 
 class Attender():
 
-    def __init__(self, Attendance_Link, Lecture_Link, session,persist):
+    def __init__(self, Attendance_Link, Lecture_Link,Lecture_Password ,session,persist):
 
         self.attendance_link = Attendance_Link
         self.lecture_link = Lecture_Link
+        self.lecture_password = Lecture_Password
         self.session = session
         self.persist = persist 
 
@@ -147,15 +155,13 @@ class Attender():
         lables = soup.find("div",attrs={"class":"d-flex flex-wrap align-items-center"})
         status = lables.find_all("input")[0]['value']
 
-        
-
-
         payload ={
                 "sessid":sessid,
                 "sesskey":sesskey,
                 "sesskey":sesskey,
                 "_qf__mod_attendance_form_studentattendance":1,
                 "mform_isexpanded_id_session":1,
+                "studentpassword": self.lecture_password,
                 "status":status,
                 "submitbutton":"Save+changes" 
         }        
