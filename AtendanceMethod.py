@@ -4,6 +4,7 @@
 from bs4 import BeautifulSoup
 import requests
 from lxml import html
+from csv import reader
 
 """
     Attendance class defing and allocating prerequisits which are required before marking attendance
@@ -45,17 +46,8 @@ class Attendance():
         return Attendance_Mark_link
 
     def Attendance_Link_Type(self, Lecture): 
-        switcher = { 
-            "OOP": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5809",2,""), 
-            "DS": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6004",2,""), 
-            "DSL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6195",2,""), 
-            "TL": ("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6145",2,""),
-            "TLL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6146",2,""),
-            "STL":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=5962",2,""),
-            "ST":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6267",3,"AIR"),
-            "DLD":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2,""),
-            "PHY":("http://op2020.mitsgwalior.in/mod/attendance/view.php?id=6268",2,"")
-        } 
+        with open("./MetaData.csv") as csvfile:
+            switcher = {line[0]:tuple(line[1:]) for line in reader(csvfile)}
 
         return switcher.get(Lecture, 0) 
 
