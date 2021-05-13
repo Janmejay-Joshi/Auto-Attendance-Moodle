@@ -60,20 +60,21 @@ class Attendance():
         attendance_type = self.Attendance_Type
         atender = Attender(attendance_link, self.lecture_link, self.lecture_password, self.session,self.persist)
 
-        if attendance_type == 1:
+        if attendance_type == '1':
             print("Type1: Direct Link")
             atender.direct_link()
 
-        elif attendance_type == 2:
+        elif attendance_type == '2':
             print("Type2: Present Button")
             atender.present_button()
 
-        elif attendance_type == 3:
+        elif attendance_type == '3':
             print("Type3: Password")
             atender.password_button()
 
         else:
-            exit(0)
+            print("Not a Valid Type Change Attendance Type in MetaData.csv")
+            return 
 
 
 """
@@ -157,14 +158,13 @@ class Attender():
                 "status":status,
                 "submitbutton":"Save+changes" 
         }        
-
-
+        
         result = self.session.post(self.attendance_link, data=payload, headers = dict(referer = self.attendance_link),allow_redirects=True)
                 
         if result.url != attendance_page.url:
             print("Attendance Marked... [^_^]")
             if not self.persist:
-                exit(0)
+               exit(0) 
             else:
                 return
         else:
