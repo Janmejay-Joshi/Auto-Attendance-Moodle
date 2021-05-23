@@ -1,2 +1,3 @@
 credentials
+*.csv
 __pycache__
