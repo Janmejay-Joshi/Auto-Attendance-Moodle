@@ -8,6 +8,12 @@
 * [beautifullSoup](https://www.crummy.com/software/BeautifulSoup/bs4/doc/#installing-beautiful-soup)
 * [requests](https://requests.readthedocs.io/en/master/user/install/#install)
 
+## Installation
+git clone the repository and in the root folder run to install dependencies
+```
+pip install - r requirements.txt
+```
+
 ## Usage
 Run AutoAtendance.py in a python environment.
 
