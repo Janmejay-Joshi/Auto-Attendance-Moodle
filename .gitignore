@@ -1,3 +1,4 @@
 credentials
-*.csv
+MetaData.csv
+Schedule.csv
 __pycache__
