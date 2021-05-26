@@ -11,7 +11,7 @@
 ## Installation
 git clone the repository and in the root folder run to install dependencies
 ```
-pip install - r requirements.txt
+pip install -r requirements.txt
 ```
 
 ## Usage
