@@ -13,17 +13,29 @@ from time import sleep
 
 
 def PreProcess():
+
+    """
+    Initalizes login variables and checks for command line arguments
+
+    Parameters: None
+    
+    Returns:
+    cred0 : Array = 
+
+    [
+        persist   : boolean
+        LOGIN_URL : String
+        USERNAME  : String
+        PASSWORD  : String
+    ]
+
+    """
     
     persist = True
-
-    # Remove 1st argument from the
-    # list of command line arguments
     argumentList = sys.argv[1:]
     
-    # Options
     options = "nh"
     
-    # Long options
     long_options = ["help", "no-persist", "remove-credentials"]
     
     try:
@@ -50,10 +62,9 @@ Usage:
                 remove("./credentials")
                 exit(0)
     except getopt.error as err:
-        # output error, and return with an error code
         print (str(err))
 
-# Check if credentials exists if not create them else load them
+    # Check if credentials exists if not create them else load them
 
     if not path.exists("./credentials"):
         print("Credentials:\n")
@@ -75,65 +86,86 @@ Usage:
     return cred0
 
 def main(cred0):
+    """
+    Logins to Moodle and Checks for Active Class then calls AttendanceMethod
+
+    Parameters: 
+    cred0 : Array = 
+
+    [
+        persist   : boolean
+        LOGIN_URL : String
+        USERNAME  : String
+        PASSWORD  : String
+    ]
+    
+    Returns: None
+
+    """
         
-        persist,LOGIN_URL,USERNAME,PASSWORD = cred0 
-        print("    Auto-Atendance running...",end = '\r')
-        Lecture = None
-        #Aporach Schedule
-        with open('Schedule.csv', encoding = "utf-8") as csvfile:
-            spamreader = reader(csvfile)
-            now = datetime.now()
+    persist,LOGIN_URL,USERNAME,PASSWORD = cred0 
+    print("    Auto-Atendance running...",end = '\r')
+    Lecture = None
+    #Aporach Schedule
+    with open('Schedule.csv', encoding = "utf-8") as csvfile:
+        spamreader = reader(csvfile)
+        now = datetime.now()
 
-            for Schedule in spamreader:
-                if Schedule[0] == now.strftime("%A")[:3]: 
+        for Schedule in spamreader:
+            if Schedule[0] == now.strftime("%A")[:3]: 
 
-                    schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-                    if schedule_time < now and schedule_time+ timedelta(hours=1) > now:
-                        Lecture = Schedule[2]
+                schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
+                if schedule_time < now and schedule_time+ timedelta(hours=1) > now:
+                    Lecture = Schedule[2]
 
-            if not persist and Lecture == None:
-                print("\nNo Class Right now [<.>_<.>]\n")
-                exit(0)
-            elif persist and Lecture == None:
-                return 
-
-
-        print(f"\nLecture now is : {Lecture}")
-        print("Loging in...", end = "\r")
-
-        
-        # Setup session and cookies
-        session_requests = requests.session()
-
-        # Get login csrf token
-        result = session_requests.get(LOGIN_URL)
-        tree = html.fromstring(result.text)
-        authenticity_token = list(set(tree.xpath("//input[@name='logintoken']/@value")))[0]
-
-        # Create payload
-        payload = {
-            "username": USERNAME, 
-            "password": PASSWORD, 
-            "logintoken": authenticity_token
-        }
-
-        # Perform login
-        result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
-
-        if result.url == LOGIN_URL:
-            print("Invalid Credentials")
-            remove("./credentials") 
+        if not persist and Lecture == None:
+            print("\nNo Class Right now [<.>_<.>]\n")
             exit(0)
-        else:
-            print("Logged in...")
+        elif persist and Lecture == None:
+            return 
 
-        
-        
-        # Mark Atendance
 
-        AtendanceMethod.Attendance(Lecture, session_requests, persist)
+    print(f"\nLecture now is : {Lecture}")
+    print("Loging in...", end = "\r")
+
+    
+    # Setup session and cookies
+    session_requests = requests.session()
+
+    # Get login csrf token
+    result = session_requests.get(LOGIN_URL)
+    tree = html.fromstring(result.text)
+    authenticity_token = list(set(tree.xpath("//input[@name='logintoken']/@value")))[0]
+
+    # Create payload
+    payload = {
+        "username": USERNAME, 
+        "password": PASSWORD, 
+        "logintoken": authenticity_token
+    }
+
+    # Perform login
+    result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
+
+    if result.url == LOGIN_URL:
+        print("Invalid Credentials")
+        remove("./credentials") 
+        exit(0)
+    else:
+        print("Logged in...")
+
+    
+    
+    # Mark Atendance
+
+    AtendanceMethod.Attendance(Lecture, session_requests, persist)
 
 if __name__ == '__main__':
+
+    """
+    Initalizes Credentials and then
+    Checks if its time for classes then calls main function
+    """
 
     cred = PreProcess()
     now = datetime.now()
