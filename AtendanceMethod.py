@@ -6,14 +6,24 @@ import requests
 from lxml import html
 from csv import reader
 
-"""
-    Attendance class defing and allocating prerequisits which are required before marking attendance
-"""
-
 
 class Attendance():
+    """
+    Attendance class defing and allocating prerequisits which are required before marking attendance
+
+    """
     
     def __init__(self, Lecture, Session, persist):
+        """
+        Initalizes variables from object constructor and Attendance_Link_Type function
+
+        Parameters:
+
+        Lecture: String
+        Session: Object
+        persist: Bollean
+
+        """
 
         self.lecture_link, self.Attendance_Type, self.lecture_password = self.Attendance_Link_Type(Lecture)
         self.session = Session
@@ -23,6 +33,16 @@ class Attendance():
         self.Assign_Attender()
 
     def Find_Link(self):
+        """
+        Searches for any open Attendance Links
+
+        Parameters: None
+
+        Returns: 
+        Attendance_Mark_link: String (Link for Attendance Marking Page)
+
+        """
+
         result = self.session.get(self.lecture_link, headers = dict(referer = self.lecture_link))
         soup = BeautifulSoup(result.content, 'lxml')
         Table = soup.find('table', attrs = {"class":"generaltable attwidth boxaligncenter"})
@@ -46,12 +66,26 @@ class Attendance():
         return Attendance_Mark_link
 
     def Attendance_Link_Type(self, Lecture): 
+        """
+        Checks for Password and the Attendance_Type ( i.e. Password or Normal )
+
+        Parameters:
+        Lecture: String ( Current Lecture according to Schedule )
+
+        Returns:
+        Tuple: TODO 
+
+        """
+
         with open("./MetaData.csv") as csvfile:
             switcher = {line[0]:tuple(line[1:]) for line in reader(csvfile)}
 
         return switcher.get(Lecture, 0) 
 
     def Assign_Attender(self):
+        """
+        Assigns an Attender according to Attendance Type
+        """
 
         attendance_link = self.Find_Link()
         if attendance_link == None:
@@ -77,13 +111,14 @@ class Attendance():
             return 
 
 
-"""
-    Attender class marks the actual atendance on basis of which type of Lecture it is
-"""
+
 
 class Attender():
+    """
+        Attender class marks the actual atendance on basis of which type of Lecture it is
+    """
 
-    def __init__(self, Attendance_Link, Lecture_Link,Lecture_Password ,session,persist):
+    def __init__(self, Attendance_Link, Lecture_Link, Lecture_Password, session, persist):
 
         self.attendance_link = Attendance_Link
         self.lecture_link = Lecture_Link
@@ -112,9 +147,6 @@ class Attender():
         lables = soup.find("div",attrs={"class":"d-flex flex-wrap align-items-center"})
         status = lables.find_all("input")[0]['value']
 
-        
-
-
         payload ={
                 "sessid":sessid,
                 "sesskey":sesskey,
@@ -124,7 +156,6 @@ class Attender():
                 "status":status,
                 "submitbutton":"Save+changes" 
         }        
-
 
         result = self.session.post(self.attendance_link, data=payload, headers = dict(referer = self.attendance_link),allow_redirects=True)
                 
@@ -169,3 +200,4 @@ class Attender():
                 return
         else:
             print("Unsuccessful")
+
