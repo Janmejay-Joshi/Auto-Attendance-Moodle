@@ -9,10 +9,14 @@
 * [requests](https://requests.readthedocs.io/en/master/user/install/#install)
 
 ## Installation
-git clone the repository and in the root folder run to install dependencies
+git clone the repository and in the root folder run the following to install dependencies
 ```
 pip install -r requirements.txt
 ```
+
+### For non-AIR Branch Students:
+
+Edit MetaData.csv and Schedule.csv according to your own Schedule, Class Links and Static Class Passwords
 
 ## Usage
 Run AutoAtendance.py in a python environment.
