@@ -12,13 +12,13 @@
 Clone the project
 
 ```bash
-  git clone https://link-to-project
+  git clone https://github.com/Janmejay-Joshi/Auto-Attendance-Moodle.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd Auto-Attendance-Moodle
 ```
 
 Install dependencies
