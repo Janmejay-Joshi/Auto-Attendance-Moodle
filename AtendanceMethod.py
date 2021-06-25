@@ -95,7 +95,6 @@ class Attendance():
                else:
                    switcher[line[0]] = tuple(line[1:])
 
-        print(switcher)
         return switcher.get(Lecture, 0)
 
     def Assign_Attender(self):
