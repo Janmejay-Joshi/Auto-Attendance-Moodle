@@ -9,17 +9,28 @@
 * [requests](https://requests.readthedocs.io/en/master/user/install/#install)
 
 ## Installation
-git clone the repository and in the root folder run the following to install dependencies
+Clone the project
+
+```bash
+  git clone https://github.com/Janmejay-Joshi/Auto-Attendance-Moodle.git
 ```
+
+Go to the project directory
+
+```bash
+  cd Auto-Attendance-Moodle
+```
+
+Install dependencies
+
+```pip
 pip install -r requirements.txt
 ```
 
-### For non-AIR Branch Students:
-
-Edit MetaData.csv and Schedule.csv according to your own Schedule, Class Links and Static Class Passwords
-
 ## Usage
-Run AutoAtendance.py in a python environment.
+```bash
+python AutoAtendance.py [ARGUMENTS]...
+```
 
 ### Script Arguments
 ```
@@ -27,6 +38,11 @@ Run AutoAtendance.py in a python environment.
       --remove-credentials  : Remove cached credentials
   -h, --help                : Print this Help section
 ```
+
 ## Known Issues
 
 * Script breaks when server goes down
+
+### For non-AIR Branch Students:
+
+Edit MetaData.csv and Schedule.csv according to your own Schedule, Class Links and Static Class Passwords
