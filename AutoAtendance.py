@@ -18,9 +18,9 @@ def PreProcess():
     Initalizes login variables and checks for command line arguments
 
     Parameters: None
-    
+
     Returns:
-    cred0 : Array = 
+    cred0 : Array =
 
     [
         persist   : boolean
@@ -30,21 +30,21 @@ def PreProcess():
     ]
 
     """
-    
+
     persist = True
     argumentList = sys.argv[1:]
-    
+
     options = "nh"
-    
+
     long_options = ["help", "no-persist", "remove-credentials"]
-    
+
     try:
         # Parsing argument
         arguments, values = getopt.getopt(argumentList, options, long_options)
-        
+
         # checking each argument
         for currentArgument, currentValue in arguments:
-    
+
             if currentArgument in ("-h", "--Help"):
                 print ("""
 Usage:
@@ -53,10 +53,10 @@ Usage:
     -h, --help                  : Print this Help section
                         """)
                 exit(0)
-                
+
             elif currentArgument in ("-n", "--no-persist"):
                 persist = False
-    
+
             elif currentArgument in ("--remove-credentials"):
                 print("Removing credentials...")
                 remove("./credentials")
@@ -71,16 +71,16 @@ Usage:
         with open("./credentials",'w') as cred_file:
             USERNAME = input("Enter Moodle Username: ")
             PASSWORD = input("Enter Moodle Password: ")
-            
+
             cred_file.write(f"{USERNAME}\n{PASSWORD}")
     else:
         with open("./credentials",'r') as cred_file:
-            
-            cred = cred_file.readlines()
-            USERNAME = cred[0] 
-            PASSWORD = cred[1] 
 
-    LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php" 
+            cred = cred_file.readlines()
+            USERNAME = cred[0]
+            PASSWORD = cred[1]
+
+    LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php"
 
     cred0 = [persist,LOGIN_URL,USERNAME,PASSWORD]
     return cred0
@@ -89,8 +89,8 @@ def main(cred0):
     """
     Logins to Moodle and Checks for Active Class then calls AttendanceMethod
 
-    Parameters: 
-    cred0 : Array = 
+    Parameters:
+    cred0 : Array =
 
     [
         persist   : boolean
@@ -98,37 +98,41 @@ def main(cred0):
         USERNAME  : String
         PASSWORD  : String
     ]
-    
+
     Returns: None
 
     """
-        
-    persist,LOGIN_URL,USERNAME,PASSWORD = cred0 
+
+    persist,LOGIN_URL,USERNAME,PASSWORD = cred0
     print("    Auto-Atendance running...",end = '\r')
     Lecture = None
     #Aporach Schedule
     with open('Schedule.csv', encoding = "utf-8") as csvfile:
         spamreader = reader(csvfile)
         now = datetime.now()
+        Skip = True
 
         for Schedule in spamreader:
-            if Schedule[0] == now.strftime("%A")[:3]: 
+            if Skip:
+                Skip = False
+            else:
+                if Schedule[0] == now.strftime("%A")[:3]:
+                    schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+                    if schedule_time < now and schedule_time + timedelta(hours=1) > now:
+                        Lecture = Schedule[2]
 
-                schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-                if schedule_time < now and schedule_time+ timedelta(hours=1) > now:
-                    Lecture = Schedule[2]
-
-        if not persist and Lecture == None:
-            print("\nNo Class Right now [<.>_<.>]\n")
-            exit(0)
-        elif persist and Lecture == None:
-            return 
+        if Lecture == None:
+            if persist:
+                return
+            else:
+                print("\nNo Class Right now [<.>_<.>]\n")
+                exit(0)
 
 
     print(f"\nLecture now is : {Lecture}")
     print("Loging in...", end = "\r")
 
-    
+
     # Setup session and cookies
     session_requests = requests.session()
 
@@ -139,8 +143,8 @@ def main(cred0):
 
     # Create payload
     payload = {
-        "username": USERNAME, 
-        "password": PASSWORD, 
+        "username": USERNAME,
+        "password": PASSWORD,
         "logintoken": authenticity_token
     }
 
@@ -149,13 +153,13 @@ def main(cred0):
 
     if result.url == LOGIN_URL:
         print("Invalid Credentials")
-        remove("./credentials") 
+        remove("./credentials")
         exit(0)
     else:
         print("Logged in...")
 
-    
-    
+
+
     # Mark Atendance
 
     AtendanceMethod.Attendance(Lecture, session_requests, persist)
@@ -169,9 +173,11 @@ if __name__ == '__main__':
 
     cred = PreProcess()
     now = datetime.now()
-    start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-    end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-    
-    while datetime.now() < end_time:
+   # start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
+   # end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
+
+   # while datetime.now() < end_time:
+    while (1):
         main(cred)
-        sleep(300)        
+        sleep(300)
+
