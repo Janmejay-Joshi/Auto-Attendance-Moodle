@@ -11,7 +11,7 @@
 ## Installation
 Clone the project
 
-```bash
+```git
   git clone https://github.com/Janmejay-Joshi/Auto-Attendance-Moodle.git
 ```
 
@@ -23,12 +23,12 @@ Go to the project directory
 
 Install dependencies
 
-```pip
+```python3
 pip install -r requirements.txt
 ```
 
 ## Usage
-```bash
+```python3
 python AutoAtendance.py [ARGUMENTS]...
 ```
 
@@ -39,9 +39,16 @@ python AutoAtendance.py [ARGUMENTS]...
   -h, --help                : Print this Help section
 ```
 
+
+## Disclaimer
+
+I do not condone skipping of classes or using it to unfairly raise attendance.
+The Script was just made as a fun little project.
+
 ## Known Issues
 
 * Script breaks when server goes down
+* Dosen't work Perfectly on termux
 
 ### For non-AIR Branch Students:
 
