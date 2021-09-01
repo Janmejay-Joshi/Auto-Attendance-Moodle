@@ -118,20 +118,20 @@ def main(cred0):
     persist,LOGIN_URL,USERNAME,PASSWORD = cred0
     print("    Auto-Atendance running...",end = '\r')
     Lecture = None
-    #Aporach Schedule
+
+    # Getting the CSV Schedule
+
     with open('Schedule.csv', encoding = "utf-8") as csvfile:
         spamreader = reader(csvfile)
         now = datetime.now()
-        Skip = True
+
+        # Getting the Current Lecture by comparing current Time
 
         for Schedule in spamreader:
-            if Skip:
-                Skip = False
-            else:
-                if Schedule[0] == now.strftime("%A")[:3]:
-                    schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
-                    if schedule_time < now and schedule_time + timedelta(hours=1) > now:
-                        Lecture = Schedule[2]
+            if Schedule[0] == now.strftime("%A")[:3]:
+                schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+                if schedule_time < now and schedule_time + timedelta(hours=1) > now:
+                    Lecture = Schedule[2]
 
         if Lecture == None:
             if persist:
