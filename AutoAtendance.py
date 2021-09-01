@@ -1,4 +1,3 @@
-
 # load Required libraries and method
 
 import getopt, sys
@@ -7,9 +6,9 @@ import requests
 from datetime import datetime,timedelta
 from csv import reader
 from lxml import html
-from bs4 import BeautifulSoup
 from os import path,remove
 from time import sleep
+from shutil import copyfile
 
 
 def PreProcess():
@@ -73,6 +72,19 @@ Usage:
             PASSWORD = input("Enter Moodle Password: ")
 
             cred_file.write(f"{USERNAME}\n{PASSWORD}")
+            BranchBool = input("Do you belong to AIR Branch [Y/N]: ")
+            if BranchBool == 'y' or BranchBool == 'Y':
+                GROUP = input("Enter Group for AIR branch [A/B]: ")
+                if GROUP == 'a' or GROUP == 'A':
+                    copyfile('./Schedule_A.csv','./Schedule.csv')
+                elif GROUP == 'b' or GROUP == 'B':
+                    copyfile('./Schedule_B.csv','./Schedule.csv')
+                else:
+                    print("\nEnter a valid Group" )
+                    sys.exit(1)
+            else:
+                print("\nRewrite Schedule.csv and Metadata.csv according to your Schedule To make the Script work")
+                exit(0)
     else:
         with open("./credentials",'r') as cred_file:
 

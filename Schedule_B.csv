@@ -2,7 +2,7 @@ Day,Time,Lecture_ID
 Mon,10:00,OS
 Mon,11:00,PS
 Mon,12:00,DBM
-Mon,14:00,CNP
+Mon,15:00,PPL
 Tue,10:00,OS
 Tue,11:00,DAA
 Tue,12:00,PS
@@ -10,11 +10,11 @@ Tue,15:00,DAA
 Wed,10:00,OS
 Wed,11:00,DAA
 Wed,12:00,PS
-Wed,15:00,DBM
+Wed,15:00,DAA
 Thu,10:00,CNP
 Thu,11:00,PS
 Thu,12:00,DBM
-Thu,15:00,PPL
+Thu,15:00,DBM
 Fri,10:00,CNP
 Fri,11:00,DAA
 Fri,12:00,DBM

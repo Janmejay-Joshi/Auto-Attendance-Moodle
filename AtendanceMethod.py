@@ -2,8 +2,6 @@
 # Import WebScraping and Form Filling Libraries
 
 from bs4 import BeautifulSoup
-import requests
-from lxml import html
 from csv import reader
 
 
@@ -147,7 +145,7 @@ class Attender():
 
     def direct_link(self):
 
-        attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
+        self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
 
         print("Attendance Marked... [^_^]")
         if not self.persist:

@@ -1,4 +1,3 @@
 credentials
-MetaData.csv
-Schedule.csv
 __pycache__
+.venv
