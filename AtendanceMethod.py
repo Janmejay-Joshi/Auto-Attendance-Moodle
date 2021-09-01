@@ -28,7 +28,7 @@ class Attendance():
         try:
             self.lecture_link, self.Attendance_Type, self.lecture_password = self.Attendance_Link_Type(Lecture)
         except Exception:
-            print("Check MetaData.csv and Schedule.csv for Mistakes")
+            print("\nCheck MetaData.csv and Schedule.csv for Mistakes\n")
 
         self.session = Session
         self.Lecture = Lecture
