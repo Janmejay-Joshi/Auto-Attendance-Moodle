@@ -76,11 +76,13 @@ Usage:
             if BranchBool == 'y' or BranchBool == 'Y':
                 GROUP = input("Enter Group for AIR branch [A/B]: ")
                 if GROUP == 'a' or GROUP == 'A':
-                    copyfile('./Schedule_A.csv','./Schedule.csv')
-                    copyfile('./MetaData_A.csv','./MetaData.csv')
+                    copyfile('./metadata/Schedule_A.csv','./metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_A.csv','./metadata/MetaData.csv')
+
                 elif GROUP == 'b' or GROUP == 'B':
-                    copyfile('./Schedule_B.csv','./Schedule.csv')
-                    copyfile('./MetaData_B.csv','./MetaData.csv')
+                    copyfile('./metadata/Schedule_B.csv','./metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_B.csv','./metadata/MetaData.csv')
+
                 else:
                     print("\nEnter a valid Group" )
                     sys.exit(1)
@@ -123,7 +125,7 @@ def main(cred0):
 
     # Getting the CSV Schedule
 
-    with open('Schedule.csv', encoding = "utf-8") as csvfile:
+    with open('./metadata/Schedule.csv', encoding = "utf-8") as csvfile:
         spamreader = reader(csvfile)
         now = datetime.now()
 

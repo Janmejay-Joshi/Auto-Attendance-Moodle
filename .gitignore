@@ -1,3 +1,7 @@
 credentials
+
 __pycache__
 .venv
+
+MetaData.csv
+Schedule.csv

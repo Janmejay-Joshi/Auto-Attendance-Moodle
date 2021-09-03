@@ -83,7 +83,7 @@ class Attendance():
 
         """
 
-        with open("./MetaData.csv") as csvfile:
+        with open("./metadata/MetaData.csv") as csvfile:
            switcher = {}
            Skip = True
 
