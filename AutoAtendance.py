@@ -77,8 +77,10 @@ Usage:
                 GROUP = input("Enter Group for AIR branch [A/B]: ")
                 if GROUP == 'a' or GROUP == 'A':
                     copyfile('./Schedule_A.csv','./Schedule.csv')
+                    copyfile('./MetaData_A.csv','./MetaData.csv')
                 elif GROUP == 'b' or GROUP == 'B':
                     copyfile('./Schedule_B.csv','./Schedule.csv')
+                    copyfile('./MetaData_B.csv','./MetaData.csv')
                 else:
                     print("\nEnter a valid Group" )
                     sys.exit(1)
