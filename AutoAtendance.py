@@ -45,7 +45,7 @@ def PreProcess():
         for currentArgument, currentValue in arguments:
 
             if currentArgument in ("-h", "--Help"):
-                print ("""
+                print("""
 Usage:
     -n, --no-persist            : Run only once
         --remove-credentials    : Remove cached credentials
@@ -61,7 +61,7 @@ Usage:
                 remove("./credentials")
                 exit(0)
     except getopt.error as err:
-        print (str(err))
+        print(str(err))
 
     # Check if credentials exists if not create them else load them
 
@@ -76,12 +76,12 @@ Usage:
             if BranchBool == 'y' or BranchBool == 'Y':
                 GROUP = input("Enter Group for AIR branch [A/B]: ")
                 if GROUP == 'a' or GROUP == 'A':
-                    copyfile('./metadata/Schedule_A.csv','./metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_A.csv','./metadata/MetaData.csv')
+                    copyfile('./metadata/Schedule_A.csv', './metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_A.csv', './metadata/MetaData.csv')
 
                 elif GROUP == 'b' or GROUP == 'B':
-                    copyfile('./metadata/Schedule_B.csv','./metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_B.csv','./metadata/MetaData.csv')
+                    copyfile('./metadata/Schedule_B.csv', './metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_B.csv', './metadata/MetaData.csv')
 
                 else:
                     print("\nEnter a valid Group" )
