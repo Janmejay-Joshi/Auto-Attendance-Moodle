@@ -50,6 +50,12 @@ The Script was just made as a fun little project.
 * Script breaks when server goes down
 * Dosen't work Perfectly on termux
 
-### For non-AIR Branch Students:
+## FAQ
 
-Edit MetaData.csv and Schedule.csv according to your own Schedule, Class Links and Static Class Passwords
+1. **For non-AIR / non-CSE Branch Students**
+
+    Edit MetaData.csv and Schedule.csv according to your own Schedule, Class Links and Static Class Passwords
+
+2. **Re-intializing configuration (Changing Branch in AutoAtendance)**
+
+    Delete credentials file to start the configuration prompt
