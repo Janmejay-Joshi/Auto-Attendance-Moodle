@@ -72,20 +72,33 @@ Usage:
             PASSWORD = input("Enter Moodle Password: ")
 
             cred_file.write(f"{USERNAME}\n{PASSWORD}")
-            BranchBool = input("Do you belong to AIR Branch [Y/N]: ")
-            if BranchBool == 'y' or BranchBool == 'Y':
+            BranchBool = input("you belong to which branch[A/C/N]:\n AIR(A)\n CSE(C)\n None(N) \n")
+            if BranchBool == 'A' or BranchBool == 'a':
                 GROUP = input("Enter Group for AIR branch [A/B]: ")
                 if GROUP == 'a' or GROUP == 'A':
-                    copyfile('./metadata/Schedule_A.csv', './metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_A.csv', './metadata/MetaData.csv')
+                    copyfile('./metadata/Schedule_AIR_A.csv', './metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_AIR_A.csv', './metadata/MetaData.csv')
 
                 elif GROUP == 'b' or GROUP == 'B':
-                    copyfile('./metadata/Schedule_B.csv', './metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_B.csv', './metadata/MetaData.csv')
+                    copyfile('./metadata/Schedule_AIR_B.csv', './metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_AIR_A.csv', './metadata/MetaData.csv')
 
                 else:
                     print("\nEnter a valid Group" )
                     sys.exit(1)
+            elif BranchBool == 'C' or BranchBool == 'c':
+                GROUP = input("Enter Group for CSE branch [A/B]: ")
+                if GROUP == 'a' or GROUP == 'A':
+                    copyfile('./metadata/Schedule_CSE_A.csv', './metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_CSE_A.csv', './metadata/MetaData.csv')
+
+                elif GROUP == 'b' or GROUP == 'B':
+                    copyfile('./metadata/Schedule_CSE_B.csv', './metadata/Schedule.csv')
+                    copyfile('./metadata/MetaData_CSE_B.csv', './metadata/MetaData.csv')
+
+                else:
+                    print("\nEnter a valid Group" )
+                    sys.exit(1)   
             else:
                 print("\nRewrite Schedule.csv and Metadata.csv according to your Schedule To make the Script work")
                 exit(0)
