@@ -53,19 +53,19 @@ class Attendance():
 
         """
 
-        result = self.session.get(self.lecture_link, headers = dict(referer = self.lecture_link))
+        result = self.session.get(self.lecture_link, headers=dict(referer=self.lecture_link))
         soup = BeautifulSoup(result.content, 'lxml')
-        Table = soup.find('table', attrs = {"class":"generaltable attwidth boxaligncenter"})
+        Table = soup.find('table', attrs={"class" : "generaltable attwidth boxaligncenter"})
         Columns = Table.find_all('tr')
         Submit = None
 
         for Column in Columns:
             Submit = Column.find('a')
-            if Submit != None:
+            if Submit is not None:
                 break
 
-        if(Submit != None):
-            Attendance_Mark_link = Submit['href'];
+        if(Submit is not None):
+            Attendance_Mark_link = Submit['href']
         else:
             print("No Attendance Link Found...")
             if not self.persist:
@@ -89,14 +89,14 @@ class Attendance():
         """
 
         with open("./metadata/MetaData.csv") as csvfile:
-           switcher = {}
-           Skip = True
+            switcher = {}
+            Skip = True
 
-           for line in reader(csvfile):
-               if Skip:
-                   Skip = False
-               else:
-                   switcher[line[0]] = tuple(line[1:])
+            for line in reader(csvfile):
+                if Skip:
+                    Skip = False
+                else:
+                    switcher[line[0]] = tuple(line[1:])
 
         return switcher.get(Lecture, 0)
 
@@ -107,11 +107,11 @@ class Attendance():
         """
 
         attendance_link = self.Find_Link()
-        if attendance_link == None:
+        if attendance_link is None:
             return
 
         attendance_type = self.Attendance_Type
-        atender = Attender(attendance_link, self.lecture_link, self.lecture_password, self.session,self.persist)
+        atender = Attender(attendance_link, self.lecture_link, self.lecture_password, self.session, self.persist)
 
         if attendance_type == '1':
             print("Type1: Direct Link")
@@ -135,7 +135,6 @@ class Attendance():
             return
 
 
-
 class Attender():
 
     """
@@ -152,7 +151,7 @@ class Attender():
 
     def direct_link(self):
 
-        self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
+        self.session.get(self.attendance_link, headers=dict(referer=self.lecture_link), allow_redirects=True)
 
         print("Attendance Marked... [^_^]")
         if not self.persist:
@@ -160,28 +159,27 @@ class Attender():
         else:
             return
 
-
     def present_button(self):
 
-        attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
+        attendance_page = self.session.get(self.attendance_link, headers=dict(referer=self.lecture_link), allow_redirects=True)
         sesskey = attendance_page.url.split("&")[1].split("=")[1]
         sessid = attendance_page.url.split("?")[1].split("&")[0].split("=")[1]
 
-        soup = BeautifulSoup(attendance_page.content,'lxml')
-        lables = soup.find("div",attrs={"class":"d-flex flex-wrap align-items-center"})
+        soup = BeautifulSoup(attendance_page.content, 'lxml')
+        lables = soup.find("div", attrs={"class": "d-flex flex-wrap align-items-center"})
         status = lables.find_all("input")[0]['value']
 
-        payload ={
-                "sessid":sessid,
-                "sesskey":sesskey,
-                "sesskey":sesskey,
-                "_qf__mod_attendance_form_studentattendance":1,
-                "mform_isexpanded_id_session":1,
-                "status":status,
-                "submitbutton":"Save+changes"
+        payload = {
+            "sessid": sessid,
+            "sesskey": sesskey,
+            "sesskey": sesskey,
+            "_qf__mod_attendance_form_studentattendance": 1,
+            "mform_isexpanded_id_session": 1,
+            "status": status,
+            "submitbutton": "Save+changes"
         }
 
-        result = self.session.post(self.attendance_link, data=payload, headers = dict(referer = self.attendance_link),allow_redirects=True)
+        result = self.session.post(self.attendance_link, data=payload, headers=dict(referer=self.attendance_link), allow_redirects=True)
 
         if result.url != attendance_page.url:
             print("Attendance Marked... [^_^]")
@@ -192,36 +190,34 @@ class Attender():
         else:
             print("Unsuccessful")
 
-
     def password_button(self):
 
-        attendance_page = self.session.get(self.attendance_link, headers = dict(referer = self.lecture_link), allow_redirects = True)
+        attendance_page = self.session.get(self.attendance_link, headers=dict(referer=self.lecture_link), allow_redirects=True)
         sesskey = attendance_page.url.split("&")[1].split("=")[1]
         sessid = attendance_page.url.split("?")[1].split("&")[0].split("=")[1]
 
-        soup = BeautifulSoup(attendance_page.content,'lxml')
-        lables = soup.find("div",attrs={"class":"d-flex flex-wrap align-items-center"})
+        soup = BeautifulSoup(attendance_page.content, 'lxml')
+        lables = soup.find("div", attrs={"class": "d-flex flex-wrap align-items-center"})
         status = lables.find_all("input")[0]['value']
 
-        payload ={
-                "sessid":sessid,
-                "sesskey":sesskey,
-                "sesskey":sesskey,
-                "_qf__mod_attendance_form_studentattendance":1,
-                "mform_isexpanded_id_session":1,
-                "studentpassword": self.lecture_password,
-                "status":status,
-                "submitbutton":"Save+changes"
+        payload = {
+            "sessid": sessid,
+            "sesskey": sesskey,
+            "sesskey": sesskey,
+            "_qf__mod_attendance_form_studentattendance": 1,
+            "mform_isexpanded_id_session": 1,
+            "studentpassword": self.lecture_password,
+            "status": status,
+            "submitbutton": "Save+changes"
         }
 
-        result = self.session.post(self.attendance_link, data=payload, headers = dict(referer = self.attendance_link),allow_redirects=True)
+        result = self.session.post(self.attendance_link, data=payload, headers=dict(referer=self.attendance_link), allow_redirects=True)
 
         if result.url != attendance_page.url:
             print("Attendance Marked... [^_^]")
             if not self.persist:
-               exit(0)
+                exit(0)
             else:
                 return
         else:
             print("Unsuccessful")
-

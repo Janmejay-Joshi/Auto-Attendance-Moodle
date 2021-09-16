@@ -1,12 +1,13 @@
 # load Required libraries and method
 
-import getopt, sys
+import getopt
+import sys
 import AtendanceMethod
 import requests
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from csv import reader
 from lxml import html
-from os import path,remove
+from os import path, remove
 from time import sleep
 from shutil import copyfile
 
@@ -67,7 +68,7 @@ Usage:
 
     if not path.exists("./credentials"):
         print("Credentials:\n")
-        with open("./credentials",'w') as cred_file:
+        with open("./credentials", 'w') as cred_file:
             USERNAME = input("Enter Moodle Username: ")
             PASSWORD = input("Enter Moodle Password: ")
 
@@ -84,7 +85,7 @@ Usage:
                     copyfile('./metadata/MetaData_AIR_A.csv', './metadata/MetaData.csv')
 
                 else:
-                    print("\nEnter a valid Group" )
+                    print("\nEnter a valid Group")
                     sys.exit(1)
             elif BranchBool == 'C' or BranchBool == 'c':
                 GROUP = input("Enter Group for CSE branch [A/B]: ")
@@ -97,13 +98,13 @@ Usage:
                     copyfile('./metadata/MetaData_CSE_B.csv', './metadata/MetaData.csv')
 
                 else:
-                    print("\nEnter a valid Group" )
-                    sys.exit(1)   
+                    print("\nEnter a valid Group")
+                    sys.exit(1)
             else:
                 print("\nRewrite Schedule.csv and Metadata.csv according to your Schedule To make the Script work")
                 exit(0)
     else:
-        with open("./credentials",'r') as cred_file:
+        with open("./credentials", 'r') as cred_file:
 
             cred = cred_file.readlines()
             USERNAME = cred[0]
@@ -111,7 +112,7 @@ Usage:
 
     LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php"
 
-    cred0 = [persist,LOGIN_URL,USERNAME,PASSWORD]
+    cred0 = [persist, LOGIN_URL, USERNAME, PASSWORD]
     return cred0
 
 def main(cred0):
@@ -132,13 +133,13 @@ def main(cred0):
 
     """
 
-    persist,LOGIN_URL,USERNAME,PASSWORD = cred0
-    print("    Auto-Atendance running...",end = '\r')
+    persist, LOGIN_URL, USERNAME, PASSWORD = cred0
+    print("    Auto-Atendance running...", end='\r')
     Lecture = None
 
     # Getting the CSV Schedule
 
-    with open('./metadata/Schedule.csv', encoding = "utf-8") as csvfile:
+    with open('./metadata/Schedule.csv', encoding="utf-8") as csvfile:
         spamreader = reader(csvfile)
         now = datetime.now()
 
@@ -146,21 +147,19 @@ def main(cred0):
 
         for Schedule in spamreader:
             if Schedule[0] == now.strftime("%A")[:3]:
-                schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+                schedule_time = datetime.strptime(Schedule[1], "%H:%M").replace(year=int(now.strftime("%Y")), month=int(now.strftime("%m")), day=int(now.strftime("%d")))
                 if schedule_time < now and schedule_time + timedelta(hours=1) > now:
                     Lecture = Schedule[2]
 
-        if Lecture == None:
+        if Lecture is None:
             if persist:
                 return
             else:
                 print("\nNo Class Right now [<.>_<.>]\n")
                 exit(0)
 
-
     print(f"\nLecture now is : {Lecture}")
-    print("Loging in...", end = "\r")
-
+    print("Loging in...", end="\r")
 
     # Setup session and cookies
     session_requests = requests.session()
@@ -178,7 +177,7 @@ def main(cred0):
     }
 
     # Perform login
-    result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
+    result = session_requests.post(LOGIN_URL, data=payload, headers=dict(referer=LOGIN_URL))
 
     if result.url == LOGIN_URL:
         print("Invalid Credentials")
@@ -186,8 +185,6 @@ def main(cred0):
         exit(0)
     else:
         print("Logged in...")
-
-
 
     # Mark Atendance
 
@@ -202,11 +199,11 @@ if __name__ == '__main__':
 
     cred = PreProcess()
     now = datetime.now()
-   # start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-   # end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
 
-   # while datetime.now() < end_time:
+    # start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+    # end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+
+    # while datetime.now() < end_time:
     while (1):
         main(cred)
         sleep(300)
-
