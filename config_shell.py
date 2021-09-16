@@ -1,13 +1,18 @@
+from os import path, listdir
+from sys import exit
 from pwinput import pwinput
 from shutil import copyfile
+from configparser import ConfigParser
 from lxml import html
 import requests
 
+Config = ConfigParser()
 
-def credentials() -> None:
-    """TODO: Docstring for credentials.
 
-    :arg1: None
+def set_credentials() -> None:
+    """
+    Gets User Input for credentials and Verifies the credentials
+
     :returns: None
 
     """
@@ -32,28 +37,108 @@ def credentials() -> None:
     payload = {
         "username": USERNAME,
         "password": PASSWORD,
-        "logintoken": authenticity_token
+        "logintoken": authenticity_token,
     }
 
     # Perform login
-    result = session_requests.post(LOGIN_URL, data=payload, headers=dict(referer=LOGIN_URL))
+    result = session_requests.post(
+        LOGIN_URL, data=payload, headers=dict(referer=LOGIN_URL)
+    )
 
     if result.url == LOGIN_URL:
         print("Invalid Credentials...")
         exit(0)
     else:
         print("Credentials Verified...")
-        with open("./credentials", 'w') as cred_file:
-            cred_file.write(f"{USERNAME}\n{PASSWORD}")
+
+        Config.add_section("credentials")
+        Config.set("credentials", "username", USERNAME)
+        Config.set("credentials", "password", PASSWORD)
+
+        with open("./config.ini", "w") as cfgfile:
+            Config.write(cfgfile)
 
 
-def main() -> None:
-    """TODO: Docstring for main.
-    :returns: TODO
+def set_metadata() -> None:
+    """
+    Set Metadata.csv and Schedule.csv Files
+
+    :returns: None
 
     """
-    credentials()
+    print("\nMetadata Configuration : \n")
+
+    i = 0
+    branches = {0: "NA"}
+
+    for branch in listdir("./metadata"):
+        if branch[-4:] != ".csv":
+            i += 1
+            print(f"[{i}] {branch}")
+            branches[i] = branch
+
+    print("[0] None")
+
+    BRANCH = branches[int(input("\nEnter Branch Index : "))]
+    print()
+
+    if BRANCH == "NA":
+        print("Write MetaData.csv and Schedule.csv according to your Lecture Schedule ")
+        exit(1)
+
+    i = 0
+    groups = {0: "NA"}
+
+    for group in listdir(f"./metadata/{BRANCH}"):
+        if group[0] != "S":
+            i += 1
+            print(f"[{i}] {group[-5]}")
+            groups[i] = group[-5]
+
+    print("[0] None")
+
+    GROUP = groups[int(input("\nEnter Branch Index : "))]
+
+    Config.add_section("metadata")
+    Config.set("metadata", "branch", BRANCH)
+    Config.set("metadata", "group", GROUP)
+
+    if GROUP != "NA":
+        copyfile(
+            f"./metadata/{BRANCH}/MetaData_{BRANCH}_{GROUP}.csv",
+            "./metadata/MetaData.csv",
+        )
+
+        copyfile(
+            f"./metadata/{BRANCH}/Schedule_{BRANCH}_{GROUP}.csv",
+            "./metadata/Schedule.csv",
+        )
+
+    else:
+        copyfile(
+            f"./metadata/{BRANCH}/MetaData_{BRANCH}.csv", "./metadata/MetaData.csv"
+        )
+
+        copyfile(
+            f"./metadata/{BRANCH}/Schedule_{BRANCH}.csv", "./metadata/Schedule.csv"
+        )
+
+    with open("./config.ini", "w") as cfgfile:
+        Config.write(cfgfile)
+
+
+def configure() -> None:
+    """
+    Starts Configuration Wizard
+    :returns: None
+
+    """
+    if path.exists("./config.ini"):
+        copyfile("./config.ini", "./config_backup.ini")
+
+    set_credentials()
+    set_metadata()
 
 
 if __name__ == "__main__":
-    main()
+    configure()
