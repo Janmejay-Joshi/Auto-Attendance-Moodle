@@ -28,7 +28,12 @@ class Attendance():
         try:
             self.lecture_link, self.Attendance_Type, self.lecture_password = self.Attendance_Link_Type(Lecture)
         except Exception:
-            print("\nCheck MetaData.csv and Schedule.csv for Mistakes\n")
+            print("""
+        Check MetaData.csv and Schedule.csv for Mistakes such as:
+             1. Trailing Spaces
+             2. Invalid Links or Initials
+             3. Mismatched Initials in MetaData.csv and Schedule.csv
+                  """)
 
         self.session = Session
         self.Lecture = Lecture
@@ -121,10 +126,12 @@ class Attendance():
             atender.password_button()
 
         else:
-            print("Not a Valid Type Change Attendance Type in MetaData.csv")
-            print(" Direct Link : 1")
-            print(" Present Button : 2")
-            print(" Password : 3")
+            print("""
+                Not a Valid Type Change Attendance Type in MetaData.csv
+                   Direct Link : 1
+                   Present Button : 2
+                   Password : 3
+                     """)
             return
 
 
