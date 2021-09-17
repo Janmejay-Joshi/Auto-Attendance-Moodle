@@ -1,24 +1,24 @@
 # load Required libraries and method
 
-import getopt, sys
+from configparser import ConfigParser
+import getopt
+import sys
 import AtendanceMethod
+from config_shell import configure
 import requests
-from datetime import datetime,timedelta
+from datetime import datetime, timedelta
 from csv import reader
 from lxml import html
-from os import path,remove
+from os import path, remove
 from time import sleep
-from shutil import copyfile
 
 
-def PreProcess():
+def PreProcess() -> list:
 
     """
     Initalizes login variables and checks for command line arguments
 
-    Parameters: None
-
-    Returns:
+    :returns:
     cred0 : Array =
 
     [
@@ -45,12 +45,14 @@ def PreProcess():
         for currentArgument, currentValue in arguments:
 
             if currentArgument in ("-h", "--Help"):
-                print("""
+                print(
+                    """
 Usage:
     -n, --no-persist            : Run only once
         --remove-credentials    : Remove cached credentials
     -h, --help                  : Print this Help section
-                        """)
+                        """
+                )
                 exit(0)
 
             elif currentArgument in ("-n", "--no-persist"):
@@ -65,61 +67,26 @@ Usage:
 
     # Check if credentials exists if not create them else load them
 
-    if not path.exists("./credentials"):
-        print("Credentials:\n")
-        with open("./credentials",'w') as cred_file:
-            USERNAME = input("Enter Moodle Username: ")
-            PASSWORD = input("Enter Moodle Password: ")
+    if not path.exists("./config.ini"):
+        configure()
 
-            cred_file.write(f"{USERNAME}\n{PASSWORD}")
-            BranchBool = input("you belong to which branch[A/C/N]:\n AIR(A)\n CSE(C)\n None(N) \n")
-            if BranchBool == 'A' or BranchBool == 'a':
-                GROUP = input("Enter Group for AIR branch [A/B]: ")
-                if GROUP == 'a' or GROUP == 'A':
-                    copyfile('./metadata/Schedule_AIR_A.csv', './metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_AIR_A.csv', './metadata/MetaData.csv')
+    Config = ConfigParser()
+    Config.read("./config.ini")
 
-                elif GROUP == 'b' or GROUP == 'B':
-                    copyfile('./metadata/Schedule_AIR_B.csv', './metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_AIR_A.csv', './metadata/MetaData.csv')
-
-                else:
-                    print("\nEnter a valid Group" )
-                    sys.exit(1)
-            elif BranchBool == 'C' or BranchBool == 'c':
-                GROUP = input("Enter Group for CSE branch [A/B]: ")
-                if GROUP == 'a' or GROUP == 'A':
-                    copyfile('./metadata/Schedule_CSE_A.csv', './metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_CSE_A.csv', './metadata/MetaData.csv')
-
-                elif GROUP == 'b' or GROUP == 'B':
-                    copyfile('./metadata/Schedule_CSE_B.csv', './metadata/Schedule.csv')
-                    copyfile('./metadata/MetaData_CSE_B.csv', './metadata/MetaData.csv')
-
-                else:
-                    print("\nEnter a valid Group" )
-                    sys.exit(1)   
-            else:
-                print("\nRewrite Schedule.csv and Metadata.csv according to your Schedule To make the Script work")
-                exit(0)
-    else:
-        with open("./credentials",'r') as cred_file:
-
-            cred = cred_file.readlines()
-            USERNAME = cred[0]
-            PASSWORD = cred[1]
+    USERNAME = Config["credentials"]["username"]
+    PASSWORD = Config["credentials"]["password"]
 
     LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php"
 
-    cred0 = [persist,LOGIN_URL,USERNAME,PASSWORD]
+    cred0 = [persist, LOGIN_URL, USERNAME, PASSWORD]
     return cred0
 
-def main(cred0):
+
+def main(cred0) -> None:
     """
     Logins to Moodle and Checks for Active Class then calls AttendanceMethod
 
-    Parameters:
-    cred0 : Array =
+    "arg0 : Array =
 
     [
         persist   : boolean
@@ -128,17 +95,17 @@ def main(cred0):
         PASSWORD  : String
     ]
 
-    Returns: None
+    :returns: None
 
     """
 
-    persist,LOGIN_URL,USERNAME,PASSWORD = cred0
-    print("    Auto-Atendance running...",end = '\r')
+    persist, LOGIN_URL, USERNAME, PASSWORD = cred0
+    print("    Auto-Atendance running...", end="\r")
     Lecture = None
 
     # Getting the CSV Schedule
 
-    with open('./metadata/Schedule.csv', encoding = "utf-8") as csvfile:
+    with open("./metadata/Schedule.csv", encoding="utf-8") as csvfile:
         spamreader = reader(csvfile)
         now = datetime.now()
 
@@ -146,21 +113,23 @@ def main(cred0):
 
         for Schedule in spamreader:
             if Schedule[0] == now.strftime("%A")[:3]:
-                schedule_time = datetime.strptime(Schedule[1],"%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+                schedule_time = datetime.strptime(Schedule[1], "%H:%M").replace(
+                    year=int(now.strftime("%Y")),
+                    month=int(now.strftime("%m")),
+                    day=int(now.strftime("%d")),
+                )
                 if schedule_time < now and schedule_time + timedelta(hours=1) > now:
                     Lecture = Schedule[2]
 
-        if Lecture == None:
+        if Lecture is None:
             if persist:
                 return
             else:
                 print("\nNo Class Right now [<.>_<.>]\n")
                 exit(0)
 
-
     print(f"\nLecture now is : {Lecture}")
-    print("Loging in...", end = "\r")
-
+    print("Loging in...", end="\r")
 
     # Setup session and cookies
     session_requests = requests.session()
@@ -174,11 +143,13 @@ def main(cred0):
     payload = {
         "username": USERNAME,
         "password": PASSWORD,
-        "logintoken": authenticity_token
+        "logintoken": authenticity_token,
     }
 
     # Perform login
-    result = session_requests.post(LOGIN_URL, data = payload, headers = dict(referer = LOGIN_URL))
+    result = session_requests.post(
+        LOGIN_URL, data=payload, headers=dict(referer=LOGIN_URL)
+    )
 
     if result.url == LOGIN_URL:
         print("Invalid Credentials")
@@ -187,13 +158,12 @@ def main(cred0):
     else:
         print("Logged in...")
 
-
-
     # Mark Atendance
 
     AtendanceMethod.Attendance(Lecture, session_requests, persist)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
 
     """
     Initalizes Credentials and then
@@ -202,11 +172,11 @@ if __name__ == '__main__':
 
     cred = PreProcess()
     now = datetime.now()
-   # start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
-   # end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d"))) 
 
-   # while datetime.now() < end_time:
-    while (1):
+    # start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+    # end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+
+    # while datetime.now() < end_time:
+    while 1:
         main(cred)
         sleep(300)
-
