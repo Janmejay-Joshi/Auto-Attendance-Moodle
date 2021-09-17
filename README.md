@@ -58,4 +58,4 @@ The Script was just made as a fun little project.
 
 2. **Re-intializing configuration (Changing Branch in AutoAtendance)**
 
-    Delete credentials file to start the configuration prompt
+    Run config_shell.py
