@@ -11,7 +11,7 @@ class Attendance:
 
     """
 
-    def __init__(self, Lecture, Session, persist):
+    def __init__(self, Lecture, Session, persist) -> None:
 
         """
         Initalizes variables from object constructor and Attendance_Link_Type function
@@ -61,10 +61,13 @@ class Attendance:
         result = self.session.get(
             self.lecture_link, headers=dict(referer=self.lecture_link)
         )
+
         soup = BeautifulSoup(result.content, "lxml")
+
         Table = soup.find(
             "table", attrs={"class": "generaltable attwidth boxaligncenter"}
         )
+
         Columns = Table.find_all("tr")
         Submit = None
 
@@ -84,7 +87,7 @@ class Attendance:
 
         return Attendance_Mark_link
 
-    def Attendance_Link_Type(self, Lecture):
+    def Attendance_Link_Type(self, Lecture) -> tuple:
 
         """
         Checks for Password and the Attendance_Type ( i.e. Password or Normal )
@@ -109,7 +112,7 @@ class Attendance:
 
         return switcher.get(Lecture, 0)
 
-    def Assign_Attender(self):
+    def Assign_Attender(self) -> None:
 
         """
         Assigns an Attender according to Attendance Type
@@ -117,7 +120,7 @@ class Attendance:
 
         attendance_link = self.Find_Link()
         if attendance_link is None:
-            return
+            return None
 
         attendance_type = self.Attendance_Type
         atender = Attender(
@@ -149,7 +152,8 @@ class Attendance:
                    Password : 3
                      """
             )
-            return
+
+            return None
 
 
 class Attender:
@@ -160,7 +164,7 @@ class Attender:
 
     def __init__(
         self, Attendance_Link, Lecture_Link, Lecture_Password, session, persist
-    ):
+    ) -> None:
 
         self.attendance_link = Attendance_Link
         self.lecture_link = Lecture_Link
@@ -168,7 +172,7 @@ class Attender:
         self.session = session
         self.persist = persist
 
-    def direct_link(self):
+    def direct_link(self) -> None:
 
         self.session.get(
             self.attendance_link,
@@ -182,7 +186,7 @@ class Attender:
         else:
             return
 
-    def present_button(self):
+    def present_button(self) -> None:
 
         attendance_page = self.session.get(
             self.attendance_link,
@@ -196,6 +200,7 @@ class Attender:
         lables = soup.find(
             "div", attrs={"class": "d-flex flex-wrap align-items-center"}
         )
+
         status = lables.find_all("input")[0]["value"]
 
         payload = {
@@ -220,17 +225,18 @@ class Attender:
             if not self.persist:
                 exit(0)
             else:
-                return
+                return None
         else:
             print("Unsuccessful")
 
-    def password_button(self):
+    def password_button(self) -> None:
 
         attendance_page = self.session.get(
             self.attendance_link,
             headers=dict(referer=self.lecture_link),
             allow_redirects=True,
         )
+
         sesskey = attendance_page.url.split("&")[1].split("=")[1]
         sessid = attendance_page.url.split("?")[1].split("&")[0].split("=")[1]
 
@@ -238,6 +244,7 @@ class Attender:
         lables = soup.find(
             "div", attrs={"class": "d-flex flex-wrap align-items-center"}
         )
+
         status = lables.find_all("input")[0]["value"]
 
         payload = {
@@ -263,6 +270,6 @@ class Attender:
             if not self.persist:
                 exit(0)
             else:
-                return
+                return None
         else:
             print("Unsuccessful")

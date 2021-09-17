@@ -133,9 +133,6 @@ def configure() -> None:
     :returns: None
 
     """
-    if path.exists("./config.ini"):
-        copyfile("./config.ini", "./config_backup.ini")
-
     set_credentials()
     set_metadata()
 

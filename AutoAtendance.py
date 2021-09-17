@@ -67,12 +67,12 @@ Usage:
 
     # Check if credentials exists if not create them else load them
 
-    if not path.exists("./credentials"):
+    if not path.exists("./config.ini"):
         configure()
 
     Config = ConfigParser()
-
     Config.read("./config.ini")
+
     USERNAME = Config["credentials"]["username"]
     PASSWORD = Config["credentials"]["password"]
 
