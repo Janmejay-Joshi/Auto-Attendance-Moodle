@@ -1,11 +1,12 @@
 # load Required libraries and method
 
 from configparser import ConfigParser
-import getopt
-import sys
+from getopt import getopt, error
+from sys import argv
 import AtendanceMethod
 from config_shell import configure
 import requests
+from requests import RequestException
 from datetime import datetime, timedelta
 from csv import reader
 from lxml import html
@@ -31,15 +32,15 @@ def PreProcess() -> list:
     """
 
     persist = True
-    argumentList = sys.argv[1:]
+    argumentList = argv[1:]
 
     options = "nh"
 
-    long_options = ["help", "no-persist", "remove-credentials"]
+    long_options = ["help", "no-persist", "configure"]
 
     try:
         # Parsing argument
-        arguments, values = getopt.getopt(argumentList, options, long_options)
+        arguments, values = getopt(argumentList, options, long_options)
 
         # checking each argument
         for currentArgument, currentValue in arguments:
@@ -48,9 +49,9 @@ def PreProcess() -> list:
                 print(
                     """
 Usage:
-    -n, --no-persist            : Run only once
-        --remove-credentials    : Remove cached credentials
-    -h, --help                  : Print this Help section
+    -n, --no-persist         : Run only once
+        --configure          : Start configuration wizard
+    -h, --help               : Print this Help section
                         """
                 )
                 exit(0)
@@ -58,11 +59,11 @@ Usage:
             elif currentArgument in ("-n", "--no-persist"):
                 persist = False
 
-            elif currentArgument in ("--remove-credentials"):
-                print("Removing credentials...")
-                remove("./credentials")
+            elif currentArgument in ("--configure"):
+                print("Removing config...")
+                configure()
                 exit(0)
-    except getopt.error as err:
+    except error as err:
         print(str(err))
 
     # Check if credentials exists if not create them else load them
@@ -82,7 +83,7 @@ Usage:
     return cred0
 
 
-def main(cred0) -> None:
+def main(cred0: list) -> None:
     """
     Logins to Moodle and Checks for Active Class then calls AttendanceMethod
 
@@ -153,8 +154,8 @@ def main(cred0) -> None:
 
     if result.url == LOGIN_URL:
         print("Invalid Credentials")
-        remove("./credentials")
-        exit(0)
+        configure()
+        exit(1)
     else:
         print("Logged in...")
 
@@ -173,10 +174,34 @@ if __name__ == "__main__":
     cred = PreProcess()
     now = datetime.now()
 
-    # start_time = datetime.strptime("10:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
-    # end_time = datetime.strptime("19:00","%H:%M").replace(year=int(now.strftime("%Y")),month=int(now.strftime("%m")),day=int(now.strftime("%d")))
+    # Uncoment Lines Below to Enable Time Limit For Auto-Attendance
 
-    # while datetime.now() < end_time:
+    #    start_time = datetime.strptime("10:00", "%H:%M").replace(
+    #        year=int(now.strftime("%Y")),
+    #        month=int(now.strftime("%m")),
+    #        day=int(now.strftime("%d")),
+    #    )
+
+    #    end_time = datetime.strptime("19:00", "%H:%M").replace(
+    #        year=int(now.strftime("%Y")),
+    #        month=int(now.strftime("%m")),
+    #        day=int(now.strftime("%d")),
+    #    )
+
+    #    while datetime.now() < end_time:
+
     while 1:
-        main(cred)
+        try:
+            main(cred)
+        except RequestException:
+            print("\n\nNetwork / Server Error ! ( Retrying in 5 min )")
+        except Exception as e:
+            print(e)
+            print(
+                """
+        Tis is New :
+            Report it as an issue on Github if you feel this is a reouccouring error
+                """
+            )
+
         sleep(300)
