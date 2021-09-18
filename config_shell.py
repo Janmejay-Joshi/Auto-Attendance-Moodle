@@ -1,4 +1,4 @@
-from os import path, listdir
+from os import listdir
 from sys import exit
 from pwinput import pwinput
 from shutil import copyfile
