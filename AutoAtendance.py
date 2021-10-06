@@ -10,8 +10,9 @@ from requests import RequestException
 from datetime import datetime, timedelta
 from csv import reader
 from lxml import html
-from os import path, remove
+from os import path
 from time import sleep
+from pickle import load
 
 
 def PreProcess() -> list:
@@ -60,7 +61,6 @@ Usage:
                 persist = False
 
             elif currentArgument in ("--configure"):
-                print("Removing config...")
                 configure()
                 exit(0)
     except error as err:
@@ -77,9 +77,11 @@ Usage:
     USERNAME = Config["credentials"]["username"]
     PASSWORD = Config["credentials"]["password"]
 
+    exp = bool(Config["miscellaneous"]["experimental"])
+
     LOGIN_URL = "http://op2020.mitsgwalior.in/login/index.php"
 
-    cred0 = [persist, LOGIN_URL, USERNAME, PASSWORD]
+    cred0 = [persist, exp, LOGIN_URL, USERNAME, PASSWORD]
     return cred0
 
 
@@ -100,7 +102,7 @@ def main(cred0: list) -> None:
 
     """
 
-    persist, LOGIN_URL, USERNAME, PASSWORD = cred0
+    persist, exp, LOGIN_URL, USERNAME, PASSWORD = cred0
     print("    Auto-Atendance running...", end="\r")
     Lecture = None
 
@@ -135,24 +137,32 @@ def main(cred0: list) -> None:
     # Setup session and cookies
     session_requests = requests.session()
 
-    # Get login csrf token
-    result = session_requests.get(LOGIN_URL)
-    tree = html.fromstring(result.text)
-    authenticity_token = list(set(tree.xpath("//input[@name='logintoken']/@value")))[0]
+    if not exp:
+        # Get login csrf token
+        result = session_requests.get(LOGIN_URL)
+        tree = html.fromstring(result.text)
+        authenticity_token = list(
+            set(tree.xpath("//input[@name='logintoken']/@value"))
+        )[0]
 
-    # Create payload
-    payload = {
-        "username": USERNAME,
-        "password": PASSWORD,
-        "logintoken": authenticity_token,
-    }
+        # Create payload
+        payload = {
+            "username": USERNAME,
+            "password": PASSWORD,
+            "logintoken": authenticity_token,
+        }
 
-    # Perform login
-    result = session_requests.post(
-        LOGIN_URL, data=payload, headers=dict(referer=LOGIN_URL)
-    )
+        # Perform login
+        result = session_requests.post(
+            LOGIN_URL, data=payload, headers=dict(referer=LOGIN_URL)
+        )
 
-    if result.url == LOGIN_URL:
+    else:
+        with open("cookies", "rb") as f:
+            session_requests.cookies.update(load(f))
+        result = session_requests.get("http://op2020.mitsgwalior.in/my/")
+
+    if result.url != "http://op2020.mitsgwalior.in/my/":
         print("Invalid Credentials")
         configure()
         exit(1)

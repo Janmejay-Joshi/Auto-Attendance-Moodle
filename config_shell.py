@@ -4,6 +4,7 @@ from pwinput import pwinput
 from shutil import copyfile
 from configparser import ConfigParser
 from lxml import html
+from pickle import dump
 import requests
 
 Config = ConfigParser()
@@ -54,6 +55,17 @@ def set_credentials() -> None:
         Config.add_section("credentials")
         Config.set("credentials", "username", USERNAME)
         Config.set("credentials", "password", PASSWORD)
+
+        Config.add_section("miscellaneous")
+
+        exp = input("Enable Experimental Features [y/N]: ")
+
+        if exp == "y" or exp == "Y":
+            Config.set("miscellaneous", "experimental", "True")
+            with open("cookies", "wb") as cookie_file:
+                dump(session_requests.cookies, cookie_file)
+        else:
+            Config.set("miscellaneous", "experimental", "False")
 
         with open("./config.ini", "w") as cfgfile:
             Config.write(cfgfile)
