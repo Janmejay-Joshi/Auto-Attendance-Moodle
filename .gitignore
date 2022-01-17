@@ -3,7 +3,7 @@ credentials
 __pycache__
 .venv
 
-MetaData.csv
-Schedule.csv
+metadata/MetaData.csv
+metadata/Schedule.csv
 
 *.ini

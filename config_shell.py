@@ -72,10 +72,9 @@ def set_metadata() -> None:
     branches = {0: "NA"}
 
     for branch in listdir("./metadata"):
-        if branch[-4:] != ".csv":
-            i += 1
-            print(f"[{i}] {branch}")
-            branches[i] = branch
+        i += 1
+        print(f"[{i}] {branch}")
+        branches[i] = branch
 
     print("[0] None")
 
@@ -89,15 +88,17 @@ def set_metadata() -> None:
     i = 0
     groups = {0: "NA"}
 
-    for group in listdir(f"./metadata/{BRANCH}"):
-        if group[0] != "S":
-            i += 1
-            print(f"[{i}] {group[-5]}")
-            groups[i] = group[-5]
+    if len(listdir(f"./metadata/{BRANCH}")) > 2:
+        for group in listdir(f"./metadata/{BRANCH}"):
+            if group[0] != "S":
+                i += 1
+                print(f"[{i}] {group[-5]}")
+                groups[i] = group[-5]
 
-    print("[0] None")
+        print("[0] None")
+        GROUP = groups[int(input("\nEnter Branch Index : "))]
 
-    GROUP = groups[int(input("\nEnter Branch Index : "))]
+    GROUP = groups[0]
 
     Config.add_section("metadata")
     Config.set("metadata", "branch", BRANCH)
