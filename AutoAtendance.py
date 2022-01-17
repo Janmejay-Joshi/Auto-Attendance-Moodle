@@ -10,7 +10,7 @@ from requests import RequestException
 from datetime import datetime, timedelta
 from csv import reader
 from lxml import html
-from os import path, remove
+from os import path
 from time import sleep
 
 
@@ -101,7 +101,7 @@ def main(cred0: list) -> None:
     """
 
     persist, LOGIN_URL, USERNAME, PASSWORD = cred0
-    print("    Auto-Atendance running...", end="\r")
+    print("Auto-Atendance running...", end="\r")
     Lecture = None
 
     # Getting the CSV Schedule
@@ -195,6 +195,9 @@ if __name__ == "__main__":
             main(cred)
         except RequestException:
             print("\n\nNetwork / Server Error ! ( Retrying in 5 min )")
+        except FileNotFoundError:
+            print("\n\nMissing Schedule.csv \n Running Configuration Wizard.")
+            configure()
         except Exception as e:
             print(e)
             print(

@@ -37,6 +37,7 @@ class Attendance:
              1. Trailing Spaces
              2. Invalid Links or Initials
              3. Mismatched Initials in MetaData.csv and Schedule.csv
+             4. Missing MetaData.csv File ( Run "python config_shell.py" )
                   """
             )
 
