@@ -72,9 +72,10 @@ def set_metadata() -> None:
     branches = {0: "NA"}
 
     for branch in listdir("./metadata"):
-        i += 1
-        print(f"[{i}] {branch}")
-        branches[i] = branch
+        if branch[-4:] != ".csv":
+            i += 1
+            print(f"[{i}] {branch}")
+            branches[i] = branch
 
     print("[0] None")
 
